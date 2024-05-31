@@ -1,0 +1,39 @@
+name: RealBikiniGirls
+sceneByURL:
+  - action: scrapXPath
+    url:
+      - realbikinigirls.com/video
+    scraper: sceneScraper
+xPathScraper:
+  sceneScraper:
+    scene:
+      Title: &title
+        selector: /html/head/title
+        postProcess:
+          - replace:
+            - regex: ([\w ]*) | Zishy
+              with: $1
+      Details: &details
+        selector: //p[@class="description"]
+      Date: $date
+        selector: //div[@class="scene-details"]/div/span[last()]
+        postProcess:
+          - replace:
+            - regex: ((\d{1,2})(?:th|st|nd) (\w{3}) (\d{4})
+              with: $3-$2-$1
+          -parseDate: 2006-Jan-02
+      Image:
+        selector: //div[@class="fake-thumb-wrap"]/a/img
+      Studio: &studio
+        Name:
+          fixed: Real Bikini Girls
+      Performers: &performers
+        Name:
+          selector: //div[@class="model-name"]
+  galleryScraper:
+    gallery:
+      Title: *title
+      Details: *details
+      Date: *Date
+      Studio: *studio
+      Performers: *performers
